@@ -15,8 +15,8 @@ session_start();
 <nav>
     <ul>
         <div class="leftContent">
-            <li><a href="index.php">Home</a></li>
-            <li><a href="user.php">élève</a></li>
+            <li><a href="index.php">Retour</a></li>
+            <li><a href="listattente.php">Mes entretiens</a></li>
         </div>
         <div class="rightContent">
             <li class="logout"><a href="logout.php">Deconexion</a></li>
@@ -28,11 +28,11 @@ session_start();
 
     </div>
     <div class="container">
-
+        <h2>Mes entretiens</h2>
         <?php
         $id_user=$_SESSION["login"];
         $pdo = new PDO("mysql:host=localhost:3306;dbname=rpp", 'root', 'root');
-        $stmt=$pdo->query("SELECT entretiens.id as entId, prof.* FROM entretiens inner join prof on prof.id = entretiens.id_prof where id_users = '$id_user' ;");
+        $stmt=$pdo->query("SELECT entretiens.id as entId,entretiens.date ,prof.* FROM entretiens inner join prof on prof.id = entretiens.id_prof where id_users = '$id_user' ;");
         $stmt =  $stmt->fetchAll(PDO::FETCH_ASSOC);
         if(count($stmt) > 0){
         ?>
@@ -41,7 +41,7 @@ session_start();
                 //principal est la classe pour le prof principal
                 $pp = (intval($datas['pp']) === 1) ? ' principal': '';
                 echo'<div class="itemEnt'.$pp.' " >
-                    <p style="color: white">nom: '.$datas["civiliter"].' '.$datas["name"].' bureau:'.$datas["bureau"].' salle:'.$datas["salle"].' matière:'.$datas["mat"] .'</p>
+                    <p style="color: white">nom: '.$datas["civiliter"].' '.$datas["name"].' bureau:'.$datas["bureau"].' salle:'.$datas["salle"].' matière:'.$datas["mat"].' '.$datas["date"].'</p>
                     <button class="AnnulEnt" data-ent="'.$datas["entId"].'">
                          Annuler           
                     </button>

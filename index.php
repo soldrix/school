@@ -1,5 +1,6 @@
 <?php
 require 'header.php';
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -16,6 +17,7 @@ require 'header.php';
     <ul>
         <div class="leftContent">
             <li><a href="index.php">Home</a></li>
+            <li><a href="listattente.php">Mes entretiens</a></li>
         </div>
         <div class="rightContent">
             <li class="logout"><a href="logout.php">Deconexion</a></li>
@@ -27,16 +29,17 @@ require 'header.php';
         <?php
         $id_user=$_SESSION["login"];
         $pdo = new PDO("mysql:host=localhost:3306;dbname=rpp", 'root', 'root');
-        $stmt=$pdo->query("SELECT name,id,bureau,salle,mat,pp,id_classe,civiliter FROM prof where id_classe = '$id_user' ;");
+        $stmt=$pdo->query("SELECT name,id,mat,pp,id_classe,civiliter FROM prof where id_classe = '$id_user' ;");
         $stmt =  $stmt->fetchAll(PDO::FETCH_ASSOC);
         if(count($stmt) > 0){
         ?>
+                <h2>Ajouter des entretiens</h2>
         <div class="selectProf">
             <?php
                 foreach($stmt as $datas){
             echo'<div class="itemProf" data-prof="'.$datas["id"].'">
                 <input type="checkbox" class="profSelect">
-                    <p style="color: white">nom: '.$datas["civiliter"].' '.$datas["name"].' bureau:'.$datas['bureau'].' salle:'.$datas['salle'].' matière:'.$datas['mat']. '</p>
+                    <p style="color: white">nom: '.$datas["civiliter"].' '.$datas["name"].' | matière:'.$datas['mat']. '</p>
             </div>';
             }?>
             <p id="errorMsg" style="color:red">

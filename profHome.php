@@ -28,33 +28,35 @@ if (!isset($_SESSION['proflogin'])){
 </nav>
 <main>
     <div class="container">
-
+        <h2>Mes entretiens</h2>
         <?php
         $id_user=$_SESSION["proflogin"];
         $pdo = new PDO("mysql:host=localhost:3306;dbname=rpp", 'root', 'root');
-        $stmt=$pdo->query("SELECT entretiens.id as entId, prof.*, entretiens.date FROM entretiens inner join prof on prof.id = entretiens.id_prof where id_prof = '$id_user' ORDER by date asc ;");
+        $stmt=$pdo->query("SELECT entretiens.id as entId, users.*, entretiens.date,classe.nom as classeNom FROM entretiens inner join users on users.id = entretiens.id_users inner join classe  on classe.id = users.id_classe where id_prof = '$id_user' ORDER by date asc ;");
         $stmt =  $stmt->fetchAll(PDO::FETCH_ASSOC);
         if(count($stmt) > 0){
             ?>
             <?php
             foreach($stmt as $datas){
                 //principal est la classe pour le prof principal
-                $pp = (intval($datas['pp']) === 1) ? ' principal': '';
-                echo'<div class="itemEnt'.$pp.' " >
-                    <p style="color: white" class="textEnt">nom:  <span id="civiliter">'.$datas["civiliter"].' </span><span id="name">'.$datas["name"].'</span> bureau: <span id="bureau">'.$datas["bureau"].'</span> salle: <span id="salle">'.$datas["salle"].'</span> matière: <span id="mat">'.$datas["mat"].'</span> <span id="date">'.$datas["date"].'</span></p>
+                echo'<div class="itemEnt ">
+                    <p style="color: white" class="textEnt">nom:<span id="nom">'.$datas["nom"].'</span> | prenom: <span id="prenom">'.$datas["prenom"].'</span> | classe: <span id="classe">'.$datas["classeNom"].'</span> | <span id="date"> '.$datas["date"].'</span></p>
                        
-                    <button class="terminerEnt" data-ent="'.$datas["entId"].'">
-                         Terminer           
-                    </button>
-                    <button class="DecalerEnt" data-ent="'.$datas["entId"].'">
-                         Decaler      
-                    </button>
+                    <div class="d-flex">
+                        <button class="terminerEnt" data-ent="'.$datas["entId"].'">
+                        Terminer
+                        </button>
+                        <button class="DecalerEnt" data-ent="'.$datas["entId"].'">
+                        Decaler
+                        </button>
+                    </div>
             </div>';
             }?>
             <?php
         }
         ?>
     </div>
+
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>
